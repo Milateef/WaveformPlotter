@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1221</width>
+    <height>947</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
+     <layout class="QGridLayout" name="gridLayout">
+      <item row="0" column="0">
+       <widget class="QStackedWidget" name="stackedWidget">
+        <property name="currentIndex">
+         <number>2</number>
+        </property>
+        <widget class="QWidget" name="index">
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_6" stretch="8,1">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,4">
+              <item>
+               <widget class="QTextBrowser" name="textBrowser_welcome_event"/>
+              </item>
+              <item>
+               <widget class="QTableView" name="tableView_welcome_content"/>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTextBrowser" name="textBrowser_welcome_log"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="windows">
+         <layout class="QGridLayout" name="gridLayout_7">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_4" stretch="8,1">
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,20">
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_2">
+                  <item>
+                   <widget class="QLabel" name="label_9">
+                    <property name="text">
+                     <string>width(°)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QLineEdit" name="lineEdit_window_width">
+                    <property name="text">
+                     <string>15</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_10">
+                  <item>
+                   <widget class="QLabel" name="label_2">
+                    <property name="text">
+                     <string>ranges(°)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox_windows_azimuth">
+                    <property name="maxVisibleItems">
+                     <number>10</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QLabel" name="label">
+                  <property name="text">
+                   <string>Mark travel times:</string>
+                  </property>
+                 </widget>
+                </item>
+                <item>
+                 <layout class="QGridLayout" name="gridLayout_2">
+                  <item row="0" column="0" colspan="2">
+                   <widget class="QCheckBox" name="checkBox_p">
+                    <property name="text">
+                     <string>p/P</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="0" column="2">
+                   <widget class="QCheckBox" name="checkBox_s">
+                    <property name="text">
+                     <string>s/S</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="0">
+                   <widget class="QCheckBox" name="checkBox_ss">
+                    <property name="text">
+                     <string>sS/SS</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="1" column="2">
+                   <widget class="QCheckBox" name="checkBox_pp">
+                    <property name="text">
+                     <string>pP/PP</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="0">
+                   <widget class="QCheckBox" name="checkBox_sp">
+                    <property name="text">
+                     <string>sP/SP</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="0" colspan="2">
+                   <widget class="QCheckBox" name="checkBox_rayleigh">
+                    <property name="text">
+                     <string>Rayleigh</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="3" column="2">
+                   <widget class="QCheckBox" name="checkBox_love">
+                    <property name="text">
+                     <string>Love</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item row="2" column="2">
+                   <widget class="QCheckBox" name="checkBox_scs">
+                    <property name="text">
+                     <string>ScS</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_3">
+                  <item>
+                   <widget class="QLabel" name="label_windows_length">
+                    <property name="text">
+                     <string>Length(1500s)</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QSlider" name="horizontalSlider_windows_length">
+                    <property name="minimum">
+                     <number>100</number>
+                    </property>
+                    <property name="maximum">
+                     <number>2400</number>
+                    </property>
+                    <property name="singleStep">
+                     <number>100</number>
+                    </property>
+                    <property name="pageStep">
+                     <number>100</number>
+                    </property>
+                    <property name="value">
+                     <number>1500</number>
+                    </property>
+                    <property name="orientation">
+                     <enum>Qt::Horizontal</enum>
+                    </property>
+                    <property name="tickInterval">
+                     <number>100</number>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_2">
+                  <item>
+                   <widget class="QCheckBox" name="checkBox_windows_normalize">
+                    <property name="text">
+                     <string>Normalize</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="checkBox_windows_showsync">
+                    <property name="text">
+                     <string>Show sync</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="checkBox_windows_showdata">
+                    <property name="text">
+                     <string>Show data</string>
+                    </property>
+                    <property name="checked">
+                     <bool>true</bool>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_4">
+                  <item>
+                   <widget class="QLabel" name="label_4">
+                    <property name="text">
+                     <string>Component:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox_windows_component">
+                    <item>
+                     <property name="text">
+                      <string>vertical</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>radial</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>tangential</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_5">
+                  <item>
+                   <widget class="QLabel" name="label_3">
+                    <property name="text">
+                     <string>amplitude:</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QComboBox" name="comboBox_windows_amplitude">
+                    <item>
+                     <property name="text">
+                      <string>1.0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>0.2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>0.4</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>0.6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>0.8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>1.2</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>1.6</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>1.8</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>2.0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>3.0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>4.0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>5.0</string>
+                     </property>
+                    </item>
+                    <item>
+                     <property name="text">
+                      <string>10.0</string>
+                     </property>
+                    </item>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="verticalLayout_5">
+                  <item>
+                   <widget class="QPushButton" name="pushButton_windows_update">
+                    <property name="text">
+                     <string>update</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <widget class="QTextBrowser" name="textBrowser_windows_hint"/>
+                </item>
+               </layout>
+              </item>
+              <item>
+               <widget class="QScrollArea" name="scrollArea">
+                <property name="widgetResizable">
+                 <bool>true</bool>
+                </property>
+                <widget class="MplWidget" name="mplwidget_windows">
+                 <property name="geometry">
+                  <rect>
+                   <x>0</x>
+                   <y>0</y>
+                   <width>958</width>
+                   <height>744</height>
+                  </rect>
+                 </property>
+                </widget>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item>
+             <widget class="QTextBrowser" name="textBrowser_windows_log"/>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+        <widget class="QWidget" name="map">
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <layout class="QVBoxLayout" name="verticalLayout_13" stretch="8,1">
+            <item>
+             <widget class="MplWidget" name="widget_map" native="true"/>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="horizontalLayout_19" stretch="2,1">
+              <item>
+               <widget class="QTextBrowser" name="textBrowser_map_log"/>
+              </item>
+              <item>
+               <layout class="QVBoxLayout" name="verticalLayout_12">
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_16">
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_12">
+                    <item>
+                     <widget class="QLabel" name="label_10">
+                      <property name="text">
+                       <string>Projection:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="comboBox_map_projection">
+                      <item>
+                       <property name="text">
+                        <string>Azimuthal Equidistant Projection</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Mercator Projection</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>Equidistant Cylindrical Projection</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <layout class="QHBoxLayout" name="horizontalLayout_15">
+                    <item>
+                     <widget class="QLabel" name="label_13">
+                      <property name="text">
+                       <string>Background:</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QComboBox" name="comboBox_map_background">
+                      <item>
+                       <property name="text">
+                        <string>normal</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>NASA ‘Blue Marble’</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>shaded relief</string>
+                       </property>
+                      </item>
+                      <item>
+                       <property name="text">
+                        <string>etopo relief</string>
+                       </property>
+                      </item>
+                     </widget>
+                    </item>
+                   </layout>
+                  </item>
+                  <item>
+                   <widget class="QCheckBox" name="checkBox_map_beachball">
+                    <property name="text">
+                     <string>BeachBall</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QHBoxLayout" name="horizontalLayout_18">
+                  <item>
+                   <widget class="QPushButton" name="pushButton_map_select_stations">
+                    <property name="text">
+                     <string>Select Stations</string>
+                    </property>
+                    <property name="autoDefault">
+                     <bool>false</bool>
+                    </property>
+                    <property name="default">
+                     <bool>false</bool>
+                    </property>
+                    <property name="flat">
+                     <bool>false</bool>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_map_reset">
+                    <property name="text">
+                     <string>Reset</string>
+                    </property>
+                   </widget>
+                  </item>
+                  <item>
+                   <widget class="QPushButton" name="pushButton_map_update_figure">
+                    <property name="text">
+                     <string>Update Figure</string>
+                    </property>
+                   </widget>
+                  </item>
+                 </layout>
+                </item>
+               </layout>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1221</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="actionsync_asdf_file"/>
+    <addaction name="actiondata_asdf_file"/>
+    <addaction name="separator"/>
+    <addaction name="actionInfo"/>
+   </widget>
+   <widget class="QMenu" name="menuTask">
+    <property name="title">
+     <string>Task</string>
+    </property>
+    <addaction name="actionWelcome"/>
+    <addaction name="actionPick_Window"/>
+    <addaction name="actionMap"/>
+    <addaction name="separator"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+    <addaction name="actionShortcuts"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuTask"/>
+   <addaction name="menuHelp"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionInfo">
+   <property name="text">
+    <string>Info</string>
+   </property>
+  </action>
+  <action name="actionWelcome">
+   <property name="text">
+    <string>Welcome</string>
+   </property>
+  </action>
+  <action name="actionPick_Window">
+   <property name="text">
+    <string>Pick Window</string>
+   </property>
+  </action>
+  <action name="actionMap">
+   <property name="text">
+    <string>Map</string>
+   </property>
+  </action>
+  <action name="actionInspect_waveforms">
+   <property name="text">
+    <string>Inspect waveforms</string>
+   </property>
+  </action>
+  <action name="actionShortcuts">
+   <property name="text">
+    <string>Shortcuts</string>
+   </property>
+  </action>
+  <action name="actionsync_asdf_file">
+   <property name="text">
+    <string>open sync file</string>
+   </property>
+  </action>
+  <action name="actiondata_asdf_file">
+   <property name="text">
+    <string>open data file</string>
+   </property>
+  </action>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>MplWidget</class>
+   <extends>QWidget</extends>
+   <header>mplwidget</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
