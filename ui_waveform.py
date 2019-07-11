@@ -184,10 +184,10 @@ class Ui_waveforms(object):
         self.horizontalLayout_7.setObjectName("horizontalLayout_7")
         spacerItem = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem)
-        self.pushButton_return = QtWidgets.QPushButton(waveforms)
-        self.pushButton_return.setAutoDefault(False)
-        self.pushButton_return.setObjectName("pushButton_return")
-        self.horizontalLayout_7.addWidget(self.pushButton_return)
+        self.pushButton_change_type = QtWidgets.QPushButton(waveforms)
+        self.pushButton_change_type.setAutoDefault(False)
+        self.pushButton_change_type.setObjectName("pushButton_change_type")
+        self.horizontalLayout_7.addWidget(self.pushButton_change_type)
         spacerItem1 = QtWidgets.QSpacerItem(40, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem1)
         self.pushButton_update = QtWidgets.QPushButton(waveforms)
@@ -239,7 +239,7 @@ class Ui_waveforms(object):
         self.lineEdit_min_sec.setText(_translate("waveforms", "20"))
         self.label_7.setText(_translate("waveforms", "wlen:"))
         self.checkBox_log.setText(_translate("waveforms", "log"))
-        self.pushButton_return.setText(_translate("waveforms", "Return"))
+        self.pushButton_change_type.setText(_translate("waveforms", "Change Type"))
         self.pushButton_update.setText(_translate("waveforms", "Update"))
 
 from mplwidget import MplWidget

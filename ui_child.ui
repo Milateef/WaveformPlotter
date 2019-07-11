@@ -344,9 +344,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="pushButton_return">
+          <widget class="QPushButton" name="pushButton_change_type">
            <property name="text">
-            <string>Return</string>
+            <string>Change Type</string>
            </property>
            <property name="autoDefault">
             <bool>false</bool>

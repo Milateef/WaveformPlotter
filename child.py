@@ -34,13 +34,16 @@ class Waveform_window(QDialog, Ui_waveforms):
             self._horizontalSlider_per_lap_valueChanged)
         # update wlen
         sampling_rate = self.obs_stream[0].stats.sampling_rate
-        self.lineEdit_wlen.setText(f"{sampling_rate/100:.2f}")
+        # we set wlen as 100 times sampling_rate (maybe a bug in obspy)
+        self.lineEdit_wlen.setText(f"{sampling_rate:.2f}")
 
         # if comobox_type is spectrogram, we will only data or syn
         self.checkBox_show_data.stateChanged.connect(
             self._checkBox_show_data_stateChanged)
         self.checkBox_show_sync.stateChanged.connect(
             self._checkBox_show_sync_stateChanged)
+        self.comboBox_type.currentIndexChanged.connect(
+            self._comboBox_type_currentIndexChanged)
 
     def _horizontalSlider_length_valueChanged(self):
         slider_value = self.horizontalSlider_length.value()
@@ -72,13 +75,20 @@ class Waveform_window(QDialog, Ui_waveforms):
                 self.checkBox_show_data.setChecked(False)
             else:
                 self.checkBox_show_data.setChecked(True)
+
+    def _comboBox_type_currentIndexChanged(self):
+        if(self.comboBox_type.currentText() == "spectrogram"):
+            if(self.checkBox_show_sync.isChecked() and self.checkBox_show_data.isChecked()):
+                self.checkBox_show_data.setChecked(True)
+                self.checkBox_show_sync.setChecked(False)
     # * ===========================================================
 
     # * ===========================================================
     # * bind buttons
     def bind_buttons(self):
         self.pushButton_update.clicked.connect(self._pushButton_update_clicked)
-        self.pushButton_return.clicked.connect(self._pushButton_return_clicked)
+        self.pushButton_change_type.clicked.connect(
+            self._pushButton_change_type_clicked)
 
     def _pushButton_update_clicked(self):
         if(self.comboBox_type.currentText() == "waveform"):
@@ -86,18 +96,22 @@ class Waveform_window(QDialog, Ui_waveforms):
         elif(self.comboBox_type.currentText() == "spectrogram"):
             self.plot_spectrogram()
 
-    def _pushButton_return_clicked(self):
-        pass
-
+    def _pushButton_change_type_clicked(self):
+        if(self.comboBox_type.currentText() == "waveform"):
+            self.comboBox_type.setCurrentText("spectrogram")
+        elif(self.comboBox_type.currentText() == "spectrogram"):
+            self.comboBox_type.setCurrentText("waveform")
+        self._pushButton_update_clicked()
     # * ===========================================================
     # * plot waveforms
+
     def plot_waveforms(self):
         canvas = self.widget_plot.canvas
         figure = canvas.fig
         figure.clf()
         ax_z = figure.add_subplot(311)
-        ax_r = figure.add_subplot(312)
-        ax_t = figure.add_subplot(313)
+        ax_r = figure.add_subplot(312, sharex=ax_z)
+        ax_t = figure.add_subplot(313, sharex=ax_z)
 
         # get some info from head_info and ui
         length = self.horizontalSlider_length.value()
@@ -183,6 +197,12 @@ class Waveform_window(QDialog, Ui_waveforms):
         ax_r.legend(fontsize='xx-small')
         ax_t.legend(fontsize='xx-small')
 
+        # * add some text
+        ax_t.set_xlabel("time(s)")
+        ax_z.set_ylabel("amplitude(m)")
+        ax_r.set_ylabel("amplitude(m)")
+        ax_t.set_ylabel("amplitude(m)")
+
         canvas.draw()
 
     def scatter_travel_times(self, phase_name, thecolor, length, ax):
@@ -213,8 +233,8 @@ class Waveform_window(QDialog, Ui_waveforms):
         figure = canvas.fig
         figure.clf()
         ax_z = figure.add_subplot(311)
-        ax_r = figure.add_subplot(312)
-        ax_t = figure.add_subplot(313)
+        ax_r = figure.add_subplot(312, sharex=ax_z)
+        ax_t = figure.add_subplot(313, sharex=ax_z)
         # get some info from head_info and ui
         length = self.horizontalSlider_length.value()
         plot_sync = self.checkBox_show_sync.isChecked()
@@ -242,5 +262,41 @@ class Waveform_window(QDialog, Ui_waveforms):
                               wlen=wlen, log=log_scale)
         # scale
         ax_z.set_ylim(min_freq, max_freq)
+
+        # * r component
+        obs_r = obs_stream[0]
+        syn_r = syn_stream[0]
+        # trim
+        obs_r.trim(obs_r.stats.starttime, obs_r.stats.starttime+length)
+        syn_r.trim(syn_r.stats.starttime, syn_r.stats.starttime+length)
+        if(plot_data):
+            obs_r.spectrogram(axes=ax_r, per_lap=per_lap,
+                              wlen=wlen, log=log_scale)
+        if(plot_sync):
+            syn_r.spectrogram(axes=ax_r, per_lap=per_lap,
+                              wlen=wlen, log=log_scale)
+        # scale
+        ax_r.set_ylim(min_freq, max_freq)
+
+        # * t component
+        obs_t = obs_stream[1]
+        syn_t = syn_stream[1]
+        # trim
+        obs_t.trim(obs_t.stats.starttime, obs_t.stats.starttime+length)
+        syn_t.trim(syn_t.stats.starttime, syn_t.stats.starttime+length)
+        if(plot_data):
+            obs_t.spectrogram(axes=ax_t, per_lap=per_lap,
+                              wlen=wlen, log=log_scale)
+        if(plot_sync):
+            syn_t.spectrogram(axes=ax_t, per_lap=per_lap,
+                              wlen=wlen, log=log_scale)
+        # scale
+        ax_t.set_ylim(min_freq, max_freq)
+
+        # * add some text
+        ax_t.set_xlabel("time(s)")
+        ax_z.set_ylabel("frequency(HZ)")
+        ax_r.set_ylabel("frequency(HZ)")
+        ax_t.set_ylabel("frequency(HZ)")
 
         canvas.draw()
