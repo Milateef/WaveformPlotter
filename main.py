@@ -14,6 +14,9 @@ from map_plotter import plot_map
 from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines
 
 class MainApp(QMainWindow, ui.Ui_MainWindow):
+    # TODO 
+    # 1. fix the bug in updating figures
+    # 2. finish the button remove
     def __init__(self):
         super(MainApp, self).__init__()
         # init all the widget from the ui file
@@ -72,11 +75,10 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         self.pushButton_windows_select_bind = None
         # window lines 
         self.window_lines=None
-        # if the mouse is moving (distinguish from just click)
-        self.mouse_moving=False
-        self.mouse_clicked=False
-        # self binders 
-        self.binders={}
+        # related to the saved windows
+        self.saved_windows=None
+        # last updated component
+        self.last_updated_component=None
     # * ===========================================================
 
     # * ===========================================================
@@ -176,6 +178,11 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
     def _pushButton_windows_update_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
             return
+
+        # if self.window_lines is not None, we should save lines and redraw them
+        if(self.window_lines!=None):
+            self.save_windows()
+
         obs_ds = self.data_asdf.ds
         syn_ds = self.sync_asdf.ds
 
@@ -205,6 +212,12 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         # plot the waveforms out
         self.plotted_window_selector=plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
                              length, normalize, show_sync, show_data, component, amp_ratio)
+
+        # if self.window_lines is not None, we should save lines and redraw them
+        if(self.window_lines!=None):
+            self.load_windows(component)
+
+        self.last_updated_component=component
 
     def _pushButton_windows_select_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -374,6 +387,54 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self.checkBox_map_beachball.setCheckable(False)
         else:
             self.checkBox_map_beachball.setCheckable(True)
+    # * ===========================================================
+
+    # * ===========================================================
+    # * windows related
+    def save_windows(self):
+        # a test shows the self.window_lines still get its data
+        # print(self.window_lines[0]["p"].get_xdata())
+        pass
+    def load_windows(self,component):
+        # print(self.window_lines[0]["p"].get_xdata())
+        # update only when the component is the same as the last updated one
+        if(component!=self.last_updated_component):
+            # clean self.window_lines
+            self.window_lines=None
+            return
+        canvas = self.mplwidget_windows.canvas
+        figure = canvas.fig
+        ax = figure.axes[0]
+
+        # the color map
+        map_color={
+            "p":"blue",
+            "s":"green",
+            "pp":"y",
+            "ss":"k",
+            "sp":"r",
+            "scs":"magenta",
+            "rayleigh":"m",
+            "love":"teal"
+        }
+
+        for key in self.window_lines[0]:
+            theline=self.window_lines[0][key]
+            # create a new line since artists couldn't be reused
+            xdata=theline.get_xdata()
+            ydata=theline.get_ydata()
+            theline_new=ax.plot(xdata, ydata, color=map_color[key], alpha=0.5, marker="o", markersize=5)[0]
+            # set as the new line
+            self.window_lines[0][key]=ax.add_line(theline_new)
+        for key in self.window_lines[1]:
+            theline=self.window_lines[1][key]
+            # create a new line since artists couldn't be reused
+            xdata=theline.get_xdata()
+            ydata=theline.get_ydata()
+            theline_new=ax.plot(xdata, ydata, color=map_color[key], alpha=0.5, marker="o", markersize=5)[0]
+            # set as the new line
+            self.window_lines[1][key]=ax.add_line(theline_new)
+        canvas.draw()
     # * ===========================================================
 if __name__ == "__main__":
     from PyQt5 import QtWidgets
