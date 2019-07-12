@@ -1,8 +1,34 @@
-from matplotlib.axes import _subplots
 import numpy as np
 from child import Waveform_window
 from utils import get_clicked_station, remove_nearby_points
+from PyQt5.QtCore import Qt
 
+def show_waveforms_on_dblclick(main_map_widget,stations_common,gcarc_list,data_asdf,sync_asdf,parent_self):
+    # since only after clicked update, this function is called with right data_asdf,sync_asdf
+    canvas = main_map_widget.canvas
+    figure = canvas.fig
+    ax = figure.axes[0]
+
+    stations_obs = data_asdf.ds.waveforms.list()
+    stations_syn = sync_asdf.ds.waveforms.list()
+    obs_tag = data_asdf.ds.waveforms[stations_obs[0]].get_waveform_tags()[0]
+    syn_tag = sync_asdf.ds.waveforms[stations_syn[0]].get_waveform_tags()[0]
+    def pressed_connect(event):
+        if(event.dblclick):
+            gcarc=event.ydata
+            gcarc_dists=(gcarc_list-gcarc)**2
+            gcarc_dists_min_index=np.argmin(gcarc_dists)
+            print(gcarc_dists_min_index,stations_common[gcarc_dists_min_index],gcarc_list[gcarc_dists_min_index])
+            id=stations_common[gcarc_dists_min_index]
+            head_id = id.replace(".", "_")
+            obs_stream = data_asdf.ds.waveforms[id][obs_tag]
+            syn_stream = sync_asdf.ds.waveforms[id][syn_tag]
+            head_info = data_asdf.ds.auxiliary_data.Traveltimes[head_id].parameters
+            waveform_window = Waveform_window(
+                    id, obs_stream, syn_stream, head_info, parent=parent_self)
+            waveform_window.show()
+
+    parent_self.binder["dbclick"]=canvas.mpl_connect('button_press_event', pressed_connect)
 
 def show_waveforms_on_right_click(main_map_widget, df, status, map_basemap, binder, data_asdf, sync_asdf, parent_self):
     canvas = main_map_widget.canvas
@@ -131,7 +157,6 @@ def pick_window_by_drawing_lines(main_map_widget, status, binder, windows_to_pic
 
     # bind event
     def pressed_connect(event):
-        parent_self.mouse_clicked=True
         if(event.button == 1):
             if(event.inaxes != ax):
                 return
@@ -182,7 +207,14 @@ def pick_window_by_drawing_lines(main_map_widget, status, binder, windows_to_pic
             theline.set_animated(False)
             canvas.draw()
 
+        # if double click
+        # def dbclick(event):
+        #     if(event.dblclick):
+        #         print(event.xdata,event.ydata)
+
         ax.callbacks.connect('xlim_changed', handle_lim_changed)
         ax.callbacks.connect('ylim_changed', handle_lim_changed)
+        # parent_self.binder["dbclick"]=canvas.mpl_connect('button_press_event', dbclick)
 
     return binder, (window_lines_start, window_lines_end)
+

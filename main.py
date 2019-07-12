@@ -11,7 +11,8 @@ from handle_asdf import ASDF_helper
 from table_pandas import DataFrameModel
 from waveform_plotter import plot_window_selector
 from map_plotter import plot_map
-from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines
+from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines,show_waveforms_on_dblclick
+
 
 class MainApp(QMainWindow, ui.Ui_MainWindow):
     # TODO 
@@ -41,6 +42,7 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self._update_azimuth_ranges)
         # beachball couldn't exist in Equidistant Cylindrical Projection
         self.comboBox_map_projection.currentIndexChanged.connect(self._comboBox_map_projection_currentIndexChanged)
+
     # * ===========================================================
     # * init values
     def initValues(self):
@@ -78,6 +80,13 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         self.saved_windows=None
         # last updated component
         self.last_updated_component=None
+        # statins in the figure
+        self.stations_common=None
+        self.gcarc_list=None
+        # binder
+        self.binder={}
+        # if the first time press update button
+        self.first_time_update=True
     # * ===========================================================
 
     # * ===========================================================
@@ -211,7 +220,7 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         amp_ratio = float(self.comboBox_windows_amplitude.currentText())
 
         # plot the waveforms out
-        self.plotted_window_selector=plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
+        self.plotted_window_selector,self.stations_common,self.gcarc_list=plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
                              length, normalize, show_sync, show_data, component, amp_ratio)
 
         # if self.window_lines is not None, we should save lines and redraw them
@@ -221,6 +230,11 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         self.last_updated_component=component
         self.last_updated_normalize=normalize
         self.last_updated_azimuth_range=azimuth_range
+
+        # double click waveform plotter
+        if(self.first_time_update):
+            self.first_time_update=False
+            self.handle_dbclick(canvas)
 
     def _pushButton_windows_select_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -403,6 +417,13 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self.checkBox_map_beachball.setCheckable(False)
         else:
             self.checkBox_map_beachball.setCheckable(True)
+
+    def handle_dbclick(self,canvas):
+        # def dbclick(event):
+        #     if(event.dblclick):
+        #         print(event.xdata,event.ydata)
+        # self.binder["dbclick"]=canvas.mpl_connect('button_press_event', dbclick)
+        show_waveforms_on_dblclick(self.mplwidget_windows, self.stations_common,self.gcarc_list,self.data_asdf,self.sync_asdf,self)
     # * ===========================================================
 
     # * ===========================================================
