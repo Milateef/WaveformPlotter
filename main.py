@@ -215,9 +215,11 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
 
         # if self.window_lines is not None, we should save lines and redraw them
         if(self.window_lines!=None):
-            self.load_windows(component)
+            self.load_windows(component,normalize,azimuth_range)
 
         self.last_updated_component=component
+        self.last_updated_normalize=normalize
+        self.last_updated_azimuth_range=azimuth_range
 
     def _pushButton_windows_select_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -395,10 +397,10 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         # a test shows the self.window_lines still get its data
         # print(self.window_lines[0]["p"].get_xdata())
         pass
-    def load_windows(self,component):
+    def load_windows(self,component,normalize,azimuth_range):
         # print(self.window_lines[0]["p"].get_xdata())
         # update only when the component is the same as the last updated one
-        if(component!=self.last_updated_component):
+        if(component!=self.last_updated_component or self.last_updated_normalize!=normalize or self.last_updated_azimuth_range!=azimuth_range):
             # clean self.window_lines
             self.window_lines=None
             return
