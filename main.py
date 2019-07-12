@@ -11,7 +11,7 @@ from handle_asdf import ASDF_helper
 from table_pandas import DataFrameModel
 from waveform_plotter import plot_window_selector
 from map_plotter import plot_map
-from handle_interactive import show_waveforms_on_right_click
+from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines
 
 class MainApp(QMainWindow, ui.Ui_MainWindow):
     def __init__(self):
@@ -64,6 +64,19 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         self.pushButton_map_select_stations_bind=None
         # map's Basemap
         self.map_basemap=None
+        # select windows
+        self.pushButton_windows_select_isdefault=False
+        # if has plotted the window selector
+        self.plotted_window_selector=False
+        # bind window selector
+        self.pushButton_windows_select_bind = None
+        # window lines 
+        self.window_lines=None
+        # if the mouse is moving (distinguish from just click)
+        self.mouse_moving=False
+        self.mouse_clicked=False
+        # self binders 
+        self.binders={}
     # * ===========================================================
 
     # * ===========================================================
@@ -157,6 +170,8 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
     def bind_button_windows(self):
         self.pushButton_windows_update.clicked.connect(
             self._pushButton_windows_update_clicked)
+        self.pushButton_windows_select.clicked.connect(
+            self._pushButton_windows_select_clicked)
 
     def _pushButton_windows_update_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -188,8 +203,68 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         amp_ratio = float(self.comboBox_windows_amplitude.currentText())
 
         # plot the waveforms out
-        plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
+        self.plotted_window_selector=plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
                              length, normalize, show_sync, show_data, component, amp_ratio)
+
+    def _pushButton_windows_select_clicked(self):
+        if(self.data_asdf == None or self.sync_asdf == None):
+            return
+        if(not self.plotted_window_selector):
+            return
+        # check which ratiobutton has been selected
+        windows_to_pick=self._get_windows_to_pick()
+        # set default 
+        self.pushButton_windows_select_isdefault = not self.pushButton_windows_select_isdefault
+        self.pushButton_windows_select.setDefault(
+            self.pushButton_windows_select_isdefault)
+        # handle animation
+        self.pushButton_windows_select_bind,self.window_lines = pick_window_by_drawing_lines(
+                self.mplwidget_windows, self.pushButton_windows_select_isdefault, self.pushButton_windows_select_bind, windows_to_pick, self.window_lines,self)
+        # if self.pushButton_windows_select_isdefault, we should not change the ratio buttons
+        if(self.pushButton_windows_select_isdefault):
+            self._windows_ratiobuttons_not_change(False)
+        else:
+            self._windows_ratiobuttons_not_change(True)
+
+    def _get_windows_to_pick(self):
+        status_start_or_end={
+            "start":self.radioButton_windows_start.isChecked(),
+            "end":self.radioButton_windows_end.isChecked()
+        }
+        status_phase={
+            "p":self.radioButton_windows_p.isChecked(),
+            "s":self.radioButton_windows_s.isChecked(),
+            "ss":self.radioButton_windows_ss.isChecked(),
+            "pp":self.radioButton_windows_pp.isChecked(),
+            "sp":self.radioButton_windows_sp.isChecked(),
+            "scs":self.radioButton_windows_scs.isChecked(),
+            "rayleigh":self.radioButton_windows_rayleigh.isChecked(),
+            "love":self.radioButton_windows_love.isChecked()
+        }
+        start_or_end=None
+        phase=None
+        for key in status_start_or_end:
+            if(status_start_or_end[key]):
+                start_or_end=key
+                break
+        for key in status_phase:
+            if(status_phase[key]):
+                phase=key
+                break
+        return (start_or_end,phase)
+
+    def _windows_ratiobuttons_not_change(self, status):
+        self.radioButton_windows_end.setEnabled(status)
+        self.radioButton_windows_love.setEnabled(status)
+        self.radioButton_windows_p.setEnabled(status)
+        self.radioButton_windows_pp.setEnabled(status)
+        self.radioButton_windows_rayleigh.setEnabled(status)
+        self.radioButton_windows_s.setEnabled(status)
+        self.radioButton_windows_scs.setEnabled(status)
+        self.radioButton_windows_sp.setEnabled(status)
+        self.radioButton_windows_sp.setEnabled(status)
+        self.radioButton_windows_ss.setEnabled(status)
+        self.radioButton_windows_start.setEnabled(status)
     # * ===========================================================
 
     # * ===========================================================

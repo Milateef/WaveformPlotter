@@ -174,6 +174,7 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
                               length, gcarc, stname, "black", show_legend)
         ax.legend()
     canvas.draw()
+    return True
 
 
 def plot_travel_times(phase_name, ax, travel_times, obs_ds, length, gcarc,  stname, thecolor, show_legend):
