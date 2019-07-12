@@ -14,6 +14,9 @@ def show_waveforms_on_dblclick(main_map_widget,stations_common,gcarc_list,data_a
     obs_tag = data_asdf.ds.waveforms[stations_obs[0]].get_waveform_tags()[0]
     syn_tag = sync_asdf.ds.waveforms[stations_syn[0]].get_waveform_tags()[0]
     def pressed_connect(event):
+        if(parent_self.checkBox_windows_normalize.isChecked()):
+            # not implement yet
+            return
         if(event.dblclick):
             gcarc=event.ydata
             gcarc_dists=(gcarc_list-gcarc)**2

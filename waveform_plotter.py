@@ -177,7 +177,7 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
 
     # get returned gcarc according to stations_common
     gcarc_list = [obs_ds.auxiliary_data.Traveltimes[stname.replace(".", "_")].parameters["gcarc"]
-                      for stname in stations_common]
+                        for stname in stations_common]
 
 
     return True,stations_common,gcarc_list
