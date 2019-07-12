@@ -15,7 +15,6 @@ from handle_interactive import show_waveforms_on_right_click, pick_window_by_dra
 
 class MainApp(QMainWindow, ui.Ui_MainWindow):
     # TODO 
-    # 1. fix the bug in updating figures
     # 2. finish the button remove
     def __init__(self):
         super(MainApp, self).__init__()
@@ -174,6 +173,8 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self._pushButton_windows_update_clicked)
         self.pushButton_windows_select.clicked.connect(
             self._pushButton_windows_select_clicked)
+        self.pushButton_windows_remove.clicked.connect(
+            self._pushButton_windows_remove_clicked)
 
     def _pushButton_windows_update_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -240,6 +241,19 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self._windows_ratiobuttons_not_change(False)
         else:
             self._windows_ratiobuttons_not_change(True)
+
+    def _pushButton_windows_remove_clicked(self):
+        if(self.window_lines==None):
+            return
+        # clean self.window_lines[key] and update the figure
+        start_or_end,phase=self._get_windows_to_pick()
+        if(start_or_end=="start"):
+            theline=self.window_lines[0][phase]
+        elif(start_or_end=="end"):
+            theline=self.window_lines[1][phase]
+        theline.set_xdata([])
+        theline.set_ydata([])
+        self.mplwidget_windows.canvas.draw()
 
     def _get_windows_to_pick(self):
         status_start_or_end={
