@@ -21,7 +21,6 @@ def show_waveforms_on_dblclick(main_map_widget,stations_common,gcarc_list,data_a
             gcarc=event.ydata
             gcarc_dists=(gcarc_list-gcarc)**2
             gcarc_dists_min_index=np.argmin(gcarc_dists)
-            print(gcarc_dists_min_index,stations_common[gcarc_dists_min_index],gcarc_list[gcarc_dists_min_index])
             id=stations_common[gcarc_dists_min_index]
             head_id = id.replace(".", "_")
             obs_stream = data_asdf.ds.waveforms[id][obs_tag]
@@ -32,6 +31,52 @@ def show_waveforms_on_dblclick(main_map_widget,stations_common,gcarc_list,data_a
             waveform_window.show()
 
     parent_self.binder["dbclick"]=canvas.mpl_connect('button_press_event', pressed_connect)
+
+def remove_trace_on_press_s(main_map_widget,length, stations_common,gcarc_list,not_used_traces,not_used_traces_marker,parent_self):
+    # label on discarded traces and log it in not_used_traces
+    canvas = main_map_widget.canvas
+    figure = canvas.fig
+    ax = figure.axes[0]
+
+    def key_connect(event):
+        if(parent_self.checkBox_windows_normalize.isChecked()):
+            # not implement yet
+            return
+        gcarc=event.ydata
+        gcarc_dists=(gcarc_list-gcarc)**2
+        gcarc_dists_min_index=np.argmin(gcarc_dists)
+        id=stations_common[gcarc_dists_min_index]
+        if(event.key=="r"):
+            # * remove traces
+            # if id is already in not_used_traces
+            if(id in not_used_traces):
+                return
+            # label 
+            not_used_traces_marker.append(ax.plot(length, gcarc_list[gcarc_dists_min_index], color="blue", alpha=0.5, marker="x", markersize=10)[0])
+            # add to not_used_traces
+            not_used_traces.append(id)
+            canvas.draw()
+        elif(event.key=="b"):
+            # * find the pos of id in the two lists
+            pos=None
+            for index,item in enumerate(not_used_traces):
+                if(item==id):
+                    pos=index
+                    break
+            print(pos,not_used_traces,id)
+            if(pos==None):
+                return
+            else:
+                not_used_traces.remove(not_used_traces[pos])
+                # del Line2D
+                theline=not_used_traces_marker[pos]
+                theline.set_xdata([])
+                theline.set_ydata([])
+                canvas.draw()
+                not_used_traces_marker.remove(not_used_traces_marker[pos])
+
+    figure.canvas.mpl_connect('key_press_event', key_connect)
+    return not_used_traces,not_used_traces_marker
 
 def show_waveforms_on_right_click(main_map_widget, df, status, map_basemap, binder, data_asdf, sync_asdf, parent_self):
     canvas = main_map_widget.canvas

@@ -11,7 +11,7 @@ from handle_asdf import ASDF_helper
 from table_pandas import DataFrameModel
 from waveform_plotter import plot_window_selector
 from map_plotter import plot_map
-from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines,show_waveforms_on_dblclick
+from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines,show_waveforms_on_dblclick,remove_trace_on_press_s
 
 
 class MainApp(QMainWindow, ui.Ui_MainWindow):
@@ -74,7 +74,7 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         self.plotted_window_selector=False
         # bind window selector
         self.pushButton_windows_select_bind = None
-        # window lines 
+        # window lines (a dict, its value is Line2D)
         self.window_lines=None
         # related to the saved windows
         self.saved_windows=None
@@ -87,6 +87,9 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         self.binder={}
         # if the first time press update button
         self.first_time_update=True
+        # store which trace is not used
+        self.not_used_traces=[]
+        self.not_used_traces_marker=[]
     # * ===========================================================
 
     # * ===========================================================
@@ -184,6 +187,7 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self._pushButton_windows_select_clicked)
         self.pushButton_windows_remove.clicked.connect(
             self._pushButton_windows_remove_clicked)
+        self.pushButton_windows_save.clicked.connect(self._pushButton_windows_save_clicked)
 
     def _pushButton_windows_update_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -235,6 +239,7 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         if(self.first_time_update):
             self.first_time_update=False
             self.handle_dbclick(canvas)
+            self.handle_keyboard(canvas)
 
     def _pushButton_windows_select_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
@@ -268,6 +273,11 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         theline.set_xdata([])
         theline.set_ydata([])
         self.mplwidget_windows.canvas.draw()
+
+    def _pushButton_windows_save_clicked(self):
+        if(self.window_lines==None):
+            return
+        
 
     def _get_windows_to_pick(self):
         status_start_or_end={
@@ -424,6 +434,9 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         #         print(event.xdata,event.ydata)
         # self.binder["dbclick"]=canvas.mpl_connect('button_press_event', dbclick)
         show_waveforms_on_dblclick(self.mplwidget_windows, self.stations_common,self.gcarc_list,self.data_asdf,self.sync_asdf,self)
+
+    def handle_keyboard(self,canvas):
+        self.not_used_traces,self.not_used_traces_marker=remove_trace_on_press_s(self.mplwidget_windows, self.horizontalSlider_windows_length.value()  ,self.stations_common,self.gcarc_list,self.not_used_traces,self.not_used_traces_marker,self)
     # * ===========================================================
 
     # * ===========================================================
