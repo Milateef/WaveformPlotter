@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_waveforms(object):
     def setupUi(self, waveforms):
         waveforms.setObjectName("waveforms")
-        waveforms.resize(800, 600)
+        waveforms.resize(1221, 947)
         self.gridLayout_2 = QtWidgets.QGridLayout(waveforms)
         self.gridLayout_2.setObjectName("gridLayout_2")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout()

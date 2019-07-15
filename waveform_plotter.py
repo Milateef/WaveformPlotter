@@ -175,12 +175,11 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
         ax.legend()
     canvas.draw()
 
-    # get returned gcarc according to stations_common
+    # get returned info
     gcarc_list = [obs_ds.auxiliary_data.Traveltimes[stname.replace(".", "_")].parameters["gcarc"]
-                        for stname in stations_common]
+                  for stname in stations_common]
 
-
-    return True,stations_common,gcarc_list
+    return True, stations_common, gcarc_list
 
 
 def plot_travel_times(phase_name, ax, travel_times, obs_ds, length, gcarc,  stname, thecolor, show_legend):

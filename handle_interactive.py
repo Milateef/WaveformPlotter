@@ -3,7 +3,8 @@ from child import Waveform_window
 from utils import get_clicked_station, remove_nearby_points
 from PyQt5.QtCore import Qt
 
-def show_waveforms_on_dblclick(main_map_widget,stations_common,gcarc_list,data_asdf,sync_asdf,parent_self):
+
+def show_waveforms_on_dblclick(main_map_widget, stations_common, gcarc_list, data_asdf, sync_asdf, parent_self):
     # since only after clicked update, this function is called with right data_asdf,sync_asdf
     canvas = main_map_widget.canvas
     figure = canvas.fig
@@ -13,70 +14,76 @@ def show_waveforms_on_dblclick(main_map_widget,stations_common,gcarc_list,data_a
     stations_syn = sync_asdf.ds.waveforms.list()
     obs_tag = data_asdf.ds.waveforms[stations_obs[0]].get_waveform_tags()[0]
     syn_tag = sync_asdf.ds.waveforms[stations_syn[0]].get_waveform_tags()[0]
+
     def pressed_connect(event):
         if(parent_self.checkBox_windows_normalize.isChecked()):
             # not implement yet
             return
         if(event.dblclick):
-            gcarc=event.ydata
-            gcarc_dists=(gcarc_list-gcarc)**2
-            gcarc_dists_min_index=np.argmin(gcarc_dists)
-            id=stations_common[gcarc_dists_min_index]
+            gcarc = event.ydata
+            gcarc_dists = (gcarc_list-gcarc)**2
+            gcarc_dists_min_index = np.argmin(gcarc_dists)
+            id = stations_common[gcarc_dists_min_index]
             head_id = id.replace(".", "_")
             obs_stream = data_asdf.ds.waveforms[id][obs_tag]
             syn_stream = sync_asdf.ds.waveforms[id][syn_tag]
             head_info = data_asdf.ds.auxiliary_data.Traveltimes[head_id].parameters
             waveform_window = Waveform_window(
-                    id, obs_stream, syn_stream, head_info, parent=parent_self)
+                id, obs_stream, syn_stream, head_info, parent=parent_self)
             waveform_window.show()
 
-    parent_self.binder["dbclick"]=canvas.mpl_connect('button_press_event', pressed_connect)
+    parent_self.binder["dbclick"] = canvas.mpl_connect(
+        'button_press_event', pressed_connect)
 
-def remove_trace_on_press_s(main_map_widget,length, stations_common,gcarc_list,not_used_traces,not_used_traces_marker,parent_self):
+
+def remove_trace_on_press_key(windows_widget, length, stations_common, gcarc_list, not_used_traces, not_used_traces_marker, parent_self):
     # label on discarded traces and log it in not_used_traces
-    canvas = main_map_widget.canvas
+    canvas = windows_widget.canvas
     figure = canvas.fig
     ax = figure.axes[0]
 
     def key_connect(event):
         if(parent_self.checkBox_windows_normalize.isChecked()):
-            # not implement yet
+            # not implemented yet
             return
-        gcarc=event.ydata
-        gcarc_dists=(gcarc_list-gcarc)**2
-        gcarc_dists_min_index=np.argmin(gcarc_dists)
-        id=stations_common[gcarc_dists_min_index]
-        if(event.key=="r"):
+        gcarc = event.ydata
+        gcarc_dists = (gcarc_list-gcarc)**2
+        gcarc_dists_min_index = np.argmin(gcarc_dists)
+        id = stations_common[gcarc_dists_min_index]
+        if(event.key == "r"):
             # * remove traces
             # if id is already in not_used_traces
             if(id in not_used_traces):
                 return
-            # label 
-            not_used_traces_marker.append(ax.plot(length, gcarc_list[gcarc_dists_min_index], color="blue", alpha=0.5, marker="x", markersize=10)[0])
+            # label
+            not_used_traces_marker.append(ax.plot(
+                length, gcarc_list[gcarc_dists_min_index], color="blue", alpha=0.5, marker="x", markersize=10)[0])
+            print(not_used_traces_marker[-1])
             # add to not_used_traces
             not_used_traces.append(id)
             canvas.draw()
-        elif(event.key=="b"):
+        elif(event.key == "b"):
             # * find the pos of id in the two lists
-            pos=None
-            for index,item in enumerate(not_used_traces):
-                if(item==id):
-                    pos=index
+            pos = None
+            for index, item in enumerate(not_used_traces):
+                if(item == id):
+                    pos = index
                     break
-            print(pos,not_used_traces,id)
-            if(pos==None):
+            print(pos, not_used_traces, id)
+            if(pos == None):
                 return
             else:
                 not_used_traces.remove(not_used_traces[pos])
                 # del Line2D
-                theline=not_used_traces_marker[pos]
+                theline = not_used_traces_marker[pos]
                 theline.set_xdata([])
                 theline.set_ydata([])
                 canvas.draw()
                 not_used_traces_marker.remove(not_used_traces_marker[pos])
 
     figure.canvas.mpl_connect('key_press_event', key_connect)
-    return not_used_traces,not_used_traces_marker
+    return not_used_traces, not_used_traces_marker
+
 
 def show_waveforms_on_right_click(main_map_widget, df, status, map_basemap, binder, data_asdf, sync_asdf, parent_self):
     canvas = main_map_widget.canvas
@@ -123,8 +130,8 @@ def show_waveforms_on_right_click(main_map_widget, df, status, map_basemap, bind
     return binder
 
 
-def pick_window_by_drawing_lines(main_map_widget, status, binder, windows_to_pick, window_lines, parent_self):
-    canvas = main_map_widget.canvas
+def pick_window_by_drawing_lines(windows_widget, status, binder, windows_to_pick, window_lines, parent_self):
+    canvas = windows_widget.canvas
     figure = canvas.fig
     ax = figure.axes[0]
     firsttime_run = False
@@ -254,6 +261,10 @@ def pick_window_by_drawing_lines(main_map_widget, status, binder, windows_to_pic
 
             theline.set_animated(False)
             canvas.draw()
+            # we have to set the focus
+            # canvas.setFocusPolicy(Qt.ClickFocus)
+            # canvas.setFocus()
+
 
         # if double click
         # def dbclick(event):
@@ -265,4 +276,3 @@ def pick_window_by_drawing_lines(main_map_widget, status, binder, windows_to_pic
         # parent_self.binder["dbclick"]=canvas.mpl_connect('button_press_event', dbclick)
 
     return binder, (window_lines_start, window_lines_end)
-

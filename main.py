@@ -11,7 +11,8 @@ from handle_asdf import ASDF_helper
 from table_pandas import DataFrameModel
 from waveform_plotter import plot_window_selector
 from map_plotter import plot_map
-from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines,show_waveforms_on_dblclick,remove_trace_on_press_s
+from handle_interactive import show_waveforms_on_right_click, pick_window_by_drawing_lines,show_waveforms_on_dblclick,remove_trace_on_press_key
+from handle_save import save_result
 
 
 class MainApp(QMainWindow, ui.Ui_MainWindow):
@@ -90,6 +91,9 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         # store which trace is not used
         self.not_used_traces=[]
         self.not_used_traces_marker=[]
+        # the filename to save the windows
+        self.save_filename=None
+        self.firsttime_save=True
     # * ===========================================================
 
     # * ===========================================================
@@ -277,7 +281,36 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
     def _pushButton_windows_save_clicked(self):
         if(self.window_lines==None):
             return
-        
+        # if it's the first time to save, we have to create a new/ select an existing file
+        if(self.firsttime_save):
+            self.save_filename = QFileDialog.getSaveFileName(
+                None,
+                "Select one file to open",
+                self.dir_path,
+                "text file (*.txt)")[0]
+            if(not self.save_filename==''):
+                with open(self.save_filename,"a") as f:
+                    save_result(f, self.stations_common,
+                                self.gcarc_list, self.window_lines, self.not_used_traces, self.last_updated_component)
+            self.firsttime_save=False
+            text_old = self.textBrowser_windows_log.toPlainText()
+            self.textBrowser_windows_log.setText(text_old +
+                                                 f"[INFO] {str(datetime.datetime.now())} save windows in {self.save_filename}\n")
+            self.textBrowser_welcome_log.setText(text_old +
+                                                 f"[INFO] {str(datetime.datetime.now())} save windows in {self.save_filename}\n")
+            self.textBrowser_map_log.setText(text_old +
+                                             f"[INFO] {str(datetime.datetime.now())} save windows in {self.save_filename}\n")
+        else:
+            with open(self.save_filename, "a") as f:
+                save_result(f, self.stations_common,
+                            self.gcarc_list, self.window_lines, self.not_used_traces, self.last_updated_component)
+            text_old = self.textBrowser_windows_log.toPlainText()
+            self.textBrowser_windows_log.setText(text_old +
+                                                 f"[INFO] {str(datetime.datetime.now())} save windows in {self.save_filename}\n")
+            self.textBrowser_welcome_log.setText(text_old +
+                                                 f"[INFO] {str(datetime.datetime.now())} save windows in {self.save_filename}\n")
+            self.textBrowser_map_log.setText(text_old +
+                                             f"[INFO] {str(datetime.datetime.now())} save windows in {self.save_filename}\n")
 
     def _get_windows_to_pick(self):
         status_start_or_end={
@@ -436,7 +469,8 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         show_waveforms_on_dblclick(self.mplwidget_windows, self.stations_common,self.gcarc_list,self.data_asdf,self.sync_asdf,self)
 
     def handle_keyboard(self,canvas):
-        self.not_used_traces,self.not_used_traces_marker=remove_trace_on_press_s(self.mplwidget_windows, self.horizontalSlider_windows_length.value()  ,self.stations_common,self.gcarc_list,self.not_used_traces,self.not_used_traces_marker,self)
+        # handle the event
+        self.not_used_traces,self.not_used_traces_marker=remove_trace_on_press_key(self.mplwidget_windows, self.horizontalSlider_windows_length.value()  ,self.stations_common,self.gcarc_list,self.not_used_traces,self.not_used_traces_marker,self)
     # * ===========================================================
 
     # * ===========================================================
@@ -451,6 +485,8 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         if(component!=self.last_updated_component or self.last_updated_normalize!=normalize or self.last_updated_azimuth_range!=azimuth_range):
             # clean self.window_lines
             self.window_lines=None
+            self.not_used_traces=[]
+            self.not_used_traces_marker=[]
             return
         canvas = self.mplwidget_windows.canvas
         figure = canvas.fig
