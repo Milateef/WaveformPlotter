@@ -16,6 +16,7 @@ def show_waveforms_on_dblclick(main_map_widget, stations_common, gcarc_list, dat
     syn_tag = sync_asdf.ds.waveforms[stations_syn[0]].get_waveform_tags()[0]
 
     def pressed_connect(event):
+        # print(stations_common)
         if(parent_self.checkBox_windows_normalize.isChecked()):
             # not implement yet
             return
@@ -51,7 +52,10 @@ def remove_trace_on_press_key(windows_widget, length, stations_common, gcarc_lis
             return
         gcarc = event.ydata
         gcarc_dists = (gcarc_list-gcarc)**2
-        gcarc_dists_min_index = np.argmin(gcarc_dists)
+        try:
+            gcarc_dists_min_index = np.argmin(gcarc_dists)
+        except:
+            return
         id = stations_common[gcarc_dists_min_index]
         if(event.key == "r"):
             # * remove traces

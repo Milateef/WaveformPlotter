@@ -196,6 +196,12 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
     def _pushButton_windows_update_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):
             return
+        
+        # remove binder
+        if(not self.first_time_update):
+            canvas = self.mplwidget_windows.canvas
+            canvas.mpl_disconnect(self.binder["dbclick"])
+            canvas.mpl_disconnect(self.binder["keypress"])
 
         # if self.window_lines is not None, we should save lines and redraw them
         if(self.window_lines!=None):
@@ -251,9 +257,8 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             main_map_widget = self.widget_map
             canvas = main_map_widget.canvas
             figure = canvas.fig
-            figure.canvas.mpl_disconnect(self.binder["dbclick"])
+            self.binder["dbclick"]=None
             self.handle_dbclick(canvas)
-            figure.canvas.mpl_disconnect(self.binder["keypress"])
             self.handle_keyboard(canvas)
 
     def _pushButton_windows_select_clicked(self):
