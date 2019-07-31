@@ -18,6 +18,7 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
 
     # for the cases if there are only one trace
     if(len(stations_common) <= 1):
+        canvas.draw()
         return
 
     obs_tag = obs_ds.waveforms[stations_common[0]].get_waveform_tags()[0]

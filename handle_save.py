@@ -41,7 +41,7 @@ def save_result(save_file, stations_common, gcarc_list, window_lines, not_used_t
         "# id gcarc component p_start p_end s_start s_end pp_start pp_end ss_start ss_end sp_start sp_end scs_start scs_end rayleigh_start rayleigh_end love_start love_end\n")
     for index, stname in enumerate(stations_common):
         if(not (stname in not_used_traces)):
-            to_write = f"{stname} {gcarc_list[index]} {component}"
+            to_write = f"{stname} {gcarc_list[index]} {component} "
             for phase in phases:
                 for thetype in ["_start", "_end"]:
                     key = phase+thetype

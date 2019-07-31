@@ -228,8 +228,10 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
         amp_ratio = float(self.comboBox_windows_amplitude.currentText())
 
         # plot the waveforms out
-        self.plotted_window_selector,self.stations_common,self.gcarc_list=plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
+        plot_window_selector_result=plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times,
                              length, normalize, show_sync, show_data, component, amp_ratio)
+        if(plot_window_selector_result!=None):
+            self.plotted_window_selector, self.stations_common, self.gcarc_list=plot_window_selector_result
 
         # if self.window_lines is not None, we should save lines and redraw them
         if(self.window_lines!=None):
