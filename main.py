@@ -246,6 +246,15 @@ class MainApp(QMainWindow, ui.Ui_MainWindow):
             self.first_time_update=False
             self.handle_dbclick(canvas)
             self.handle_keyboard(canvas)
+        else:
+            # update the status of handle_dbclick and handle_keyboard
+            main_map_widget = self.widget_map
+            canvas = main_map_widget.canvas
+            figure = canvas.fig
+            figure.canvas.mpl_disconnect(self.binder["dbclick"])
+            self.handle_dbclick(canvas)
+            figure.canvas.mpl_disconnect(self.binder["keypress"])
+            self.handle_keyboard(canvas)
 
     def _pushButton_windows_select_clicked(self):
         if(self.data_asdf == None or self.sync_asdf == None):

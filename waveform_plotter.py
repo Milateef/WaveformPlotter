@@ -19,7 +19,9 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
     # for the cases if there are only one trace
     if(len(stations_common) <= 1):
         canvas.draw()
-        return
+        gcarc_list = [obs_ds.auxiliary_data.Traveltimes[stname.replace(".", "_")].parameters["gcarc"]
+                      for stname in stations_common]
+        return True, stations_common, gcarc_list
 
     obs_tag = obs_ds.waveforms[stations_common[0]].get_waveform_tags()[0]
     syn_tag = syn_ds.waveforms[stations_common[0]].get_waveform_tags()[0]

@@ -22,7 +22,10 @@ def show_waveforms_on_dblclick(main_map_widget, stations_common, gcarc_list, dat
         if(event.dblclick):
             gcarc = event.ydata
             gcarc_dists = (gcarc_list-gcarc)**2
-            gcarc_dists_min_index = np.argmin(gcarc_dists)
+            try:
+                gcarc_dists_min_index = np.argmin(gcarc_dists)
+            except:
+                return
             id = stations_common[gcarc_dists_min_index]
             head_id = id.replace(".", "_")
             obs_stream = data_asdf.ds.waveforms[id][obs_tag]
@@ -81,7 +84,8 @@ def remove_trace_on_press_key(windows_widget, length, stations_common, gcarc_lis
                 canvas.draw()
                 not_used_traces_marker.remove(not_used_traces_marker[pos])
 
-    figure.canvas.mpl_connect('key_press_event', key_connect)
+    parent_self.binder["keypress"] = figure.canvas.mpl_connect(
+        'key_press_event', key_connect)
     return not_used_traces, not_used_traces_marker
 
 
@@ -264,7 +268,6 @@ def pick_window_by_drawing_lines(windows_widget, status, binder, windows_to_pick
             # we have to set the focus
             # canvas.setFocusPolicy(Qt.ClickFocus)
             # canvas.setFocus()
-
 
         # if double click
         # def dbclick(event):
