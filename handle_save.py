@@ -2,6 +2,8 @@ from scipy.interpolate import interp1d
 from collections import namedtuple
 import numpy as np
 
+# ! a bug in save console window
+
 
 def save_result(save_file, stations_common, gcarc_list, window_lines, not_used_traces, component):
     phases = ["p", "s", "pp", "ss", "sp", "scs", "rayleigh", "love"]
