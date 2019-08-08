@@ -27,8 +27,8 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
     syn_tag = syn_ds.waveforms[stations_common[0]].get_waveform_tags()[0]
 
     # discard traces where the difference of amplitude between obs and syn are not so large
-    stations_common = discard_according_to_amplitude(
-        stations_common, obs_ds, syn_ds, obs_tag, syn_tag)
+    # stations_common = discard_according_to_amplitude(
+    #     stations_common, obs_ds, syn_ds, obs_tag, syn_tag)
 
     # get traces to plot
     if(component == "vertical"):
