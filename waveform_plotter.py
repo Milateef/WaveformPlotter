@@ -88,11 +88,11 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
             y_syn = 0.5*syn_trace.data*standard_distance*amp_ratio+gcarc
             # print(index, np.max(y_obs), np.max(y_syn),
             #       standard_distance, np.max(obs_trace.data), np.max(syn_trace.data))
-            if(show_data):
-                ax.plot(x_obs, y_obs, color="k")
             if(show_sync):
                 ax.plot(x_syn, y_syn, color="r")
-
+            if(show_data):
+                ax.plot(x_obs, y_obs, color="k")
+    
             # if show_legend
             if(index == 0):
                 show_legend = True
@@ -146,11 +146,11 @@ def plot_window_selector(obs_ds, syn_ds, canvas, azimuth_range, travel_times, le
             y_obs = 0.5*obs_trace.data*amp_ratio+start_index+index
             y_syn = 0.5*syn_trace.data*amp_ratio+start_index+index
             # plot lines
-            if(show_data):
-                ax.plot(x_obs, y_obs, color="k")
             if(show_sync):
                 ax.plot(x_syn, y_syn, color="r")
-
+            if(show_data):
+                ax.plot(x_obs, y_obs, color="k")
+    
             # if show_legend
             if(index == 0):
                 show_legend = True
